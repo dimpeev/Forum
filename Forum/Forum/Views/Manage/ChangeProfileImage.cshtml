@@ -1,0 +1,80 @@
+﻿@model Forum.Models.ChangeProfileImageViewModel
+@{
+    ViewBag.Title = "Profile image";
+}
+
+<script type="text/javascript">
+
+    var _validFileExtensions = [".jpg", ".jpeg", ".bmp", ".gif", ".png"];
+
+    function ValidateSingleInput(oInput) {
+        if (oInput.type == "file") {
+            var sFileName = oInput.value;
+            if (sFileName.length > 0)
+            {
+                var blnValid = false;
+                var sizeInvalid = false;
+
+                for (var j = 0; j < _validFileExtensions.length; j++) {
+                    var sCurExtension = _validFileExtensions[j];
+                    if (sFileName.substr(sFileName.length - sCurExtension.length, sCurExtension.length).toLowerCase() == sCurExtension.toLowerCase()) {
+                        blnValid = true;
+                        break;
+                    }
+                }
+
+                var maxFileSize = 1024000;
+
+                if (oInput.files[0].size > maxFileSize && blnValid)
+                {
+                    blnValid = false;
+                    sizeInvalid = true;
+                }
+                document.getElementById("text-danger").innerHTML = "";
+                if (!blnValid) {
+                    if (sizeInvalid == false) {
+                        document.getElementById("text-danger").innerHTML = "The choosen file is not an image!";
+                    }
+                    else {
+                        document.getElementById("text-danger").innerHTML = "The maximum file size allowed is 1MB!";
+                    }
+                    oInput.value = "";
+                    return false;
+                }
+            }
+
+        }
+        return true;
+    }
+
+</script>
+
+<div class="container">
+
+    <h2>Change profile image</h2>
+
+    <h4>Current profile image:</h4>
+
+    <div class="profile-image-container">
+        <img src="~/Content/images/@Model.ProfileImage"/>
+    </div>
+
+    <h4>Choose new profile image:</h4>
+
+    @Html.ValidationSummary("", new { @class = "text-danger", @id = "text-danger" })
+
+    @using (Html.BeginForm("UploadProfileImage", "Manage", FormMethod.Post, new { enctype = "multipart/form-data" }))
+    {
+
+        <input type="file" name="file" id="file" onchange="ValidateSingleInput(this);">
+        <input type="submit" name="Upload" id="upload" value="Upload" class="btn btn-default"/>
+    }
+
+    <h4>Delete profile image:</h4>
+
+    @using (Html.BeginForm("DeleteProfileImage", "Manage", FormMethod.Post, null))
+    {
+        <input type="submit" name="Delete" id="delete" value="Delete" class="btn btn-default" />
+    }
+</div>
+
