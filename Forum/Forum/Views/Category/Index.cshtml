@@ -1,0 +1,39 @@
+﻿@model List<Forum.Models.Category>
+@{
+    ViewBag.Title = "Categories";
+}
+
+<h2>Categories</h2>
+<hr />
+
+<div class="container">
+    <div class="well">
+        <div class="form-horizontal">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Desciption</th>
+                        <th class="text-center">Edit</th>
+                        <th class="text-center">Delete</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var category in Model)
+                    {
+                        <tr>
+                            <td>@category.CategoryName</td>
+                            <td>@category.Description</td>
+                            <td class="text-center">@Html.ActionLink("Edit", "Edit", "Category", new { @id = category.Id }, null)</td>
+                            <td class="text-center">@Html.ActionLink("Delete", "Delete", "Category", new { @id = category.Id }, null)</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        <br />
+        <div>
+        </div>
+    </div>
+    @Html.ActionLink("Add new category", "Create", "Category", null, null)
+</div>

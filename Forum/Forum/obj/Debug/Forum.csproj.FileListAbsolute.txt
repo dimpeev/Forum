@@ -77,6 +77,5 @@ C:\Users\Mitko\Desktop\SoftUniForum_v2.0\Forum\Forum\bin\Microsoft.Owin.Security
 C:\Users\Mitko\Desktop\SoftUniForum_v2.0\Forum\Forum\bin\Microsoft.Owin.Security.Google.xml
 C:\Users\Mitko\Desktop\SoftUniForum_v2.0\Forum\Forum\bin\Microsoft.Owin.Security.Twitter.xml
 C:\Users\Mitko\Desktop\SoftUniForum_v2.0\Forum\Forum\bin\Microsoft.Owin.Security.MicrosoftAccount.xml
-C:\Users\Mitko\Desktop\SoftUniForum_v2.0\Forum\Forum\obj\Debug\Forum.csprojResolveAssemblyReference.cache
 C:\Users\Mitko\Desktop\SoftUniForum_v2.0\Forum\Forum\obj\Debug\Forum.dll
 C:\Users\Mitko\Desktop\SoftUniForum_v2.0\Forum\Forum\obj\Debug\Forum.pdb

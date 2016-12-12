@@ -7,7 +7,7 @@ namespace Forum.Migrations
     using Models;
     using Microsoft.AspNet.Identity;
     using Microsoft.AspNet.Identity.EntityFramework;
-    public sealed class Configuration : DbMigrationsConfiguration<Forum.Models.ForumDbContext>
+    public sealed class Configuration : DbMigrationsConfiguration<global::Forum.Models.ForumDbContext>
     {
         public Configuration()
         {
@@ -16,7 +16,7 @@ namespace Forum.Migrations
             ContextKey = "Forum.Models.ForumDbContext";
         }
 
-        protected override void Seed(Forum.Models.ForumDbContext context)
+        protected override void Seed(global::Forum.Models.ForumDbContext context)
         {
             if(!context.Roles.Any())
             {
@@ -65,7 +65,8 @@ namespace Forum.Migrations
             {
                 Email = email,
                 UserName = email,
-                DisplayName = displayName
+                DisplayName = displayName,
+                ProfileImage = "default.png"            
             };
 
             var result = userManger.Create(user, pass);

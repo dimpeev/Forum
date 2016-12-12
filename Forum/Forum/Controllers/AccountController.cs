@@ -169,7 +169,8 @@ namespace Forum.Controllers
                     if (result.Succeeded)
                     {
                         return RedirectToAction("Index", "Home");
-                    }             
+                    }
+                    AddErrors(result);
                 }
                 AddErrors(result);
             }

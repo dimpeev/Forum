@@ -322,6 +322,8 @@ namespace Forum.Controllers
             return result.Succeeded ? RedirectToAction("ManageLogins") : RedirectToAction("ManageLogins", new { Message = ManageMessageId.Error });
         }
 
+        //
+        // GET: /Manage/ChangeProfileImage
         public ActionResult ChangeProfileImage()
         {
             using (ForumDbContext db = new ForumDbContext())
@@ -344,6 +346,8 @@ namespace Forum.Controllers
             }
         }
 
+        //
+        // POST: /Manage/UploadProfileImage
         [HttpPost]
         public ActionResult UploadProfileImage(HttpPostedFileBase file)
         {
@@ -362,6 +366,12 @@ namespace Forum.Controllers
                         }
                         else
                         {
+                            if (db.Users.FirstOrDefault(a => a.Id == userId).ProfileImage != "default.png")
+                            {
+                                var deleteFileName = db.Users.FirstOrDefault(a => a.Id == userId).ProfileImage;
+                                var deletePath = Path.Combine(Server.MapPath("~/Content/images"), deleteFileName);
+                                System.IO.File.Delete(deletePath);
+                            }
                             var extension = Path.GetExtension(file.FileName);
                             var fileName = "avatar_" + DateTime.Now.ToString("yyyyMMddHHmmss") + extension;
                             var path = Path.Combine(Server.MapPath("~/Content/images"), fileName);
@@ -376,6 +386,8 @@ namespace Forum.Controllers
             return RedirectToAction("ChangeProfileImage", "Manage");
         }
 
+        //
+        // POST: /Manage/DeleteProfileImage
         [HttpPost]
         public ActionResult DeleteProfileImage()
         {
@@ -389,6 +401,12 @@ namespace Forum.Controllers
                 }
                 else
                 {
+                    if(db.Users.FirstOrDefault(a => a.Id == userId).ProfileImage != "default.png")
+                    {
+                        var fileName = db.Users.FirstOrDefault(a => a.Id == userId).ProfileImage;
+                        var path = Path.Combine(Server.MapPath("~/Content/images"), fileName);
+                        System.IO.File.Delete(path);
+                    }
                     user.ProfileImage = "default.png";
                     db.SaveChanges();
                 }
