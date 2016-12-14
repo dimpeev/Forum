@@ -17,10 +17,6 @@ namespace Forum.Controllers
         // GET: Category
         public ActionResult Index()
         {
-            if(!User.IsInRole("Admin"))
-            {
-                return RedirectToAction("Index", "Home");
-            }
             using (ForumDbContext db = new ForumDbContext())
             {
                 var categories = db.Categories.ToList();
@@ -33,10 +29,6 @@ namespace Forum.Controllers
         [HttpGet]
         public ActionResult Create()
         {
-            if (!User.IsInRole("Admin"))
-            {
-                return RedirectToAction("Index", "Home");
-            }
             return View();
         }
 
@@ -45,10 +37,6 @@ namespace Forum.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create(Category category)
         {
-            if (!User.IsInRole("Admin"))
-            {
-                return RedirectToAction("Index", "Home");
-            }
             if (ModelState.IsValid)
             {
                 using (ForumDbContext db = new ForumDbContext())
@@ -66,7 +54,7 @@ namespace Forum.Controllers
                         return View(category);
                     }
                 }
-                return RedirectToAction("Index", "Category");
+                return RedirectToAction("Index");
             }
             return View(category);
         }
@@ -75,10 +63,6 @@ namespace Forum.Controllers
         [HttpGet]
         public ActionResult Edit(int? id)
         {
-            if (!User.IsInRole("Admin"))
-            {
-                return RedirectToAction("Index", "Home");
-            }
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
@@ -99,10 +83,6 @@ namespace Forum.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Edit(Category category)
         {
-            if (!User.IsInRole("Admin"))
-            {
-                return RedirectToAction("Index", "Home");
-            }
             if (ModelState.IsValid)
             {
                 using (ForumDbContext db = new ForumDbContext())
@@ -119,7 +99,7 @@ namespace Forum.Controllers
                         return View(category);
                     }
                 }
-                return RedirectToAction("Index", "Category");
+                return RedirectToAction("Index");
             }
 
             return View(category);
@@ -128,10 +108,6 @@ namespace Forum.Controllers
         // GET: /Category/Delete
         public ActionResult Delete(int? id)
         {
-            if (!User.IsInRole("Admin"))
-            {
-                return RedirectToAction("Index", "Home");
-            }
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
@@ -153,10 +129,6 @@ namespace Forum.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int? id)
         {
-            if (!User.IsInRole("Admin"))
-            {
-                return RedirectToAction("Index", "Home");
-            }
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);

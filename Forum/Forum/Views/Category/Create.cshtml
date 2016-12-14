@@ -11,8 +11,8 @@
         @using (Html.BeginForm("Create", "Category", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
         {
             @Html.AntiForgeryToken()
-            @Html.HiddenFor(m => m.DateCreated)
             @Html.ValidationSummary("", new { @class = "text-danger" })
+            @Html.HiddenFor(m => m.DateCreated)
             <br />
             <div class="form-group">
                 @Html.LabelFor(m => m.CategoryName, new { @class = "col-sm-4 control-label" })
@@ -31,6 +31,7 @@
             <div class="form-group">
                 <div class="col-sm-offset-4 col-sm-4">
                     <input type="submit" class="btn btn-success" value="Create" />
+                    @Html.ActionLink("Cancel", "Index", "Category", null, new { @class = "btn btn-default" })
                 </div>
             </div>
         }
