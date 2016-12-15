@@ -10,7 +10,7 @@ namespace Forum.Controllers
     {
         public ActionResult Index()
         {
-            return View();
+            return RedirectToAction("Index", "Article");
         }
 
         public ActionResult About()

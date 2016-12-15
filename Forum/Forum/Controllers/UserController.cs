@@ -15,20 +15,20 @@ namespace Forum.Controllers
     [Authorize(Roles = "Admin")]
     public class UserController : Controller
     {
+        private ForumDbContext db = new ForumDbContext();
+
         // GET: User
         [HttpGet]
         public ActionResult Index()
         {
-            using (ForumDbContext db = new ForumDbContext())
-            {
-                var users = db.Users.ToList();
+            var users = db.Users.ToList();
 
-                ViewBag.Admins = GetAdmins(db);
+            ViewBag.Admins = GetAdmins(db);
 
-                return View(users);
-            }
+            return View(users);
         }
 
+        //Get all users with Admin role
         private HashSet<string> GetAdmins(ForumDbContext db)
         {
             var userManager = Request.GetOwinContext().GetUserManager<ApplicationUserManager>();
@@ -36,6 +36,7 @@ namespace Forum.Controllers
             var users = db.Users.ToList();
 
             var admins = new HashSet<string>();
+
             foreach (var user in users)
             {
                 if (userManager.IsInRole(user.Id, "Admin"))
@@ -51,27 +52,24 @@ namespace Forum.Controllers
         [HttpGet]
         public ActionResult Edit(string id)
         {
-            if(string.IsNullOrEmpty(id))
+            if (string.IsNullOrEmpty(id))
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
 
-            using (ForumDbContext db = new ForumDbContext())
+            var user = db.Users.FirstOrDefault(u => u.Id == id);
+
+            if (user == null)
             {
-                var user = db.Users.FirstOrDefault(u => u.Id == id);
-
-                if (user == null)
-                {
-                    return new HttpStatusCodeResult(HttpStatusCode.NotFound);
-                }
-
-                var model = new UserViewModel();
-                model.Email = user.Email;
-                model.DisplayName = user.DisplayName;
-                model.Roles = GetUserRoles(user, db);
-
-                return View(model);
+                return new HttpStatusCodeResult(HttpStatusCode.NotFound);
             }
+
+            var model = new UserViewModel();
+            model.Email = user.Email;
+            model.DisplayName = user.DisplayName;
+            model.Roles = GetUserRoles(user, db);
+
+            return View(model);
 
         }
 
@@ -87,53 +85,61 @@ namespace Forum.Controllers
 
             if (ModelState.IsValid)
             {
-                using (ForumDbContext db = new ForumDbContext())
+                var user = db.Users.FirstOrDefault(u => u.Id.Equals(id));
+
+                if (user == null)
                 {
-                    var user = db.Users.FirstOrDefault(u => u.Id.Equals(id));
-
-                    if (user == null)
-                    {
-                        return new HttpStatusCodeResult(HttpStatusCode.NotFound);
-                    }
-
-                    int countSelectedRoles = 0;
-
-                    foreach(var role in model.Roles)
-                    {
-                        if(role.IsSelected)
-                        {
-                            countSelectedRoles++;
-                        }
-                    }
-
-                    if(countSelectedRoles == 0)
-                    {
-                        ModelState.AddModelError(string.Empty, "User must have a role!");
-
-                        return View(model);
-                    }
-                    else if(countSelectedRoles == 2)
-                    {
-                        ModelState.AddModelError(string.Empty, "User must have only 1 role assigned!");
-                        return View(model);
-                    }
-
-                    user.Email = model.Email;
-                    user.DisplayName = model.DisplayName;
-                    user.UserName = model.Email;
-
-                    if (!string.IsNullOrEmpty(model.Password))
-                    {
-                        var passwordHasher = new PasswordHasher();
-                        var newPasswordHash = passwordHasher.HashPassword(model.Password);
-                        user.PasswordHash = newPasswordHash;
-                    }
-
-                    SetUserRoles(user, db, model);
-
-                    db.Entry(user).State = EntityState.Modified;
-                    db.SaveChanges();
+                    return new HttpStatusCodeResult(HttpStatusCode.NotFound);
                 }
+
+                int countSelectedRoles = 0;
+
+                foreach (var role in model.Roles)
+                {
+                    if (role.IsSelected)
+                    {
+                        countSelectedRoles++;
+                    }
+                }
+
+                if (countSelectedRoles == 0)
+                {
+                    ModelState.AddModelError(string.Empty, "User must have a role!");
+
+                    return View(model);
+                }
+                else if (countSelectedRoles == 2)
+                {
+                    ModelState.AddModelError(string.Empty, "User must have only 1 role assigned!");
+                    return View(model);
+                }
+
+                if (user.UserName == User.Identity.GetUserName())
+                {
+                    bool isSelected = model.Roles.Where(r => r.Name.Equals("Admin")).Select(i => i.IsSelected).FirstOrDefault();
+
+                    if (!isSelected)
+                    {
+                        ModelState.AddModelError(string.Empty, "You can't remove your own admin rights!");
+                        return View(model);
+                    }
+                }
+
+                user.Email = model.Email;
+                user.DisplayName = model.DisplayName;
+                user.UserName = model.Email;
+
+                if (!string.IsNullOrEmpty(model.Password))
+                {
+                    var passwordHasher = new PasswordHasher();
+                    var newPasswordHash = passwordHasher.HashPassword(model.Password);
+                    user.PasswordHash = newPasswordHash;
+                }
+
+                SetUserRoles(user, db, model);
+
+                db.Entry(user).State = EntityState.Modified;
+                db.SaveChanges();
 
                 return RedirectToAction("Index");
             }
@@ -141,6 +147,7 @@ namespace Forum.Controllers
             return View(model);
         }
 
+        //Change selected user role
         private void SetUserRoles(ApplicationUser user, ForumDbContext db, UserViewModel model)
         {
             var userManager = Request
@@ -160,6 +167,7 @@ namespace Forum.Controllers
             }
         }
 
+        //Get all available user roles
         private List<Role> GetUserRoles(ApplicationUser user, ForumDbContext db)
         {
             var rolesInDatabase = db.Roles.Select(r => r.Name).OrderBy(r => r).ToList();
@@ -189,27 +197,25 @@ namespace Forum.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            using (ForumDbContext database = new ForumDbContext())
+            var user = db.Users.Where(u => u.Id.Equals(id)).FirstOrDefault();
+
+            if (user == null)
             {
-                var user = database.Users.Where(u => u.Id.Equals(id)).FirstOrDefault();
-
-                if (user == null)
-                {
-                    return new HttpStatusCodeResult(HttpStatusCode.NotFound);
-                }
-
-                ViewBag.DisableDeleteButton = false;
-
-                if (user.UserName == User.Identity.GetUserName())
-                {
-                    ModelState.AddModelError(string.Empty, "You can't delete this user. You are currently logged in with it!");
-                    ViewBag.DisableDeleteButton = true;
-                }
-
-                return View(user);
+                return new HttpStatusCodeResult(HttpStatusCode.NotFound);
             }
+
+            ViewBag.DisableDeleteButton = false;
+
+            if (user.UserName == User.Identity.GetUserName())
+            {
+                ModelState.AddModelError(string.Empty, "You can't delete this user. You are currently logged in with it!");
+                ViewBag.DisableDeleteButton = true;
+            }
+
+            return View(user);
         }
 
+        // POST: /User/Delete
         [HttpPost]
         [ValidateAntiForgeryToken]
         [ActionName("Delete")]
@@ -219,33 +225,40 @@ namespace Forum.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            using (ForumDbContext db = new ForumDbContext())
+            var user = db.Users.Where(u => u.Id.Equals(id)).FirstOrDefault();
+
+            if (user == null)
             {
-                var user = db.Users.Where(u => u.Id.Equals(id)).FirstOrDefault();
-
-                if (user == null)
-                {
-                    return new HttpStatusCodeResult(HttpStatusCode.NotFound);
-                }
-
-                var userArticles = db.Articles.Where(a => a.AuthorID == user.Id);
-
-                foreach (var article in userArticles)
-                {
-                    db.Articles.Remove(article);
-                }
-
-                if (user.ProfileImage != "default.png")
-                {
-                    var fileName = user.ProfileImage;
-                    var path = Path.Combine(Server.MapPath("~/Content/images"), fileName);
-                    System.IO.File.Delete(path);
-                }
-
-                db.Users.Remove(user);
-                db.SaveChanges();
+                return new HttpStatusCodeResult(HttpStatusCode.NotFound);
             }
-                return RedirectToAction("Index");
+
+            var userArticles = db.Articles.Where(a => a.AuthorID == user.Id);
+
+            foreach (var article in userArticles)
+            {
+                db.Articles.Remove(article);
+            }
+
+            if (user.ProfileImage != "default.png")
+            {
+                var fileName = user.ProfileImage;
+                var path = Path.Combine(Server.MapPath("~/Content/images"), fileName);
+                System.IO.File.Delete(path);
+            }
+
+            db.Users.Remove(user);
+            db.SaveChanges();
+
+            return RedirectToAction("Index");
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                db.Dispose();
+            }
+            base.Dispose(disposing);
         }
     }
 }

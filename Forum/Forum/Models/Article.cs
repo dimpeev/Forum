@@ -20,24 +20,19 @@ namespace Forum.Models
         [Key]
         public int Id { get; set; }
 
-        [Required]
-        [ForeignKey("CategoryName")]
         public int CategoryId { get; set; }
 
         public virtual Category CategoryName { get; set; }
 
         public int ParentPostId { get; set; }
 
-        [Required]
         [ForeignKey("Author")]
         public string AuthorID { get; set; }
 
         public virtual ApplicationUser Author { get; set; }
 
-        [Required]
         public string Title { get; set; }
 
-        [Required]
         public string Content { get; set; }
 
         public string DateCreated { get; set; }

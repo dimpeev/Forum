@@ -13,16 +13,15 @@ namespace Forum.Controllers
     [Authorize(Roles ="Admin")]
     public class CategoryController : Controller
     {
+        private ForumDbContext db = new ForumDbContext();
 
         // GET: Category
+        [HttpGet]
         public ActionResult Index()
         {
-            using (ForumDbContext db = new ForumDbContext())
-            {
-                var categories = db.Categories.ToList();
+            var categories = db.Categories.ToList();
 
-                return View(categories);
-            }
+            return View(categories);
         }
 
         // GET: /Category/Create
@@ -39,21 +38,19 @@ namespace Forum.Controllers
         {
             if (ModelState.IsValid)
             {
-                using (ForumDbContext db = new ForumDbContext())
+                var result = db.Categories.FirstOrDefault(c => c.CategoryName.ToLower() == category.CategoryName.ToLower() && c.Id != category.Id);
+                if (result == null)
                 {
-                    var result = db.Categories.FirstOrDefault(c => c.CategoryName.ToLower() == category.CategoryName.ToLower() && c.Id != category.Id);
-                    if (result == null)
-                    {
-                        category.DateCreated = DateTime.Now.ToString("yyyy-MM-dd");
-                        db.Categories.Add(category);
-                        db.SaveChanges();
-                    }
-                    else
-                    {
-                        ModelState.AddModelError(string.Empty, "Category with the same name already exists! Please choose another name!");
-                        return View(category);
-                    }
+                    category.DateCreated = DateTime.Now.ToString("yyyy-MM-dd");
+                    db.Categories.Add(category);
+                    db.SaveChanges();
                 }
+                else
+                {
+                    ModelState.AddModelError(string.Empty, "Category with the same name already exists! Please choose another name!");
+                    return View(category);
+                }
+
                 return RedirectToAction("Index");
             }
             return View(category);
@@ -67,15 +64,14 @@ namespace Forum.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            using (ForumDbContext db = new ForumDbContext())
+
+            var category = db.Categories.FirstOrDefault(c => c.Id == id);
+            if (category == null)
             {
-                var category = db.Categories.FirstOrDefault(c => c.Id == id);
-                if (category == null)
-                {
-                    return new HttpStatusCodeResult(HttpStatusCode.NotFound);
-                }
-                return View(category);
+                return new HttpStatusCodeResult(HttpStatusCode.NotFound);
             }
+            return View(category);
+
         }
 
         // POST: /Category/Edit
@@ -85,19 +81,17 @@ namespace Forum.Controllers
         {
             if (ModelState.IsValid)
             {
-                using (ForumDbContext db = new ForumDbContext())
+
+                var result = db.Categories.FirstOrDefault(c => c.CategoryName.ToLower() == category.CategoryName.ToLower() && c.Id != category.Id);
+                if (result == null)
                 {
-                    var result = db.Categories.FirstOrDefault(c => c.CategoryName.ToLower() == category.CategoryName.ToLower() && c.Id != category.Id);
-                    if (result == null)
-                    {
-                        db.Entry(category).State = EntityState.Modified;
-                        db.SaveChanges();
-                    }
-                    else
-                    {
-                        ModelState.AddModelError(string.Empty, "Category with the same name already exists! Please choose another name!");
-                        return View(category);
-                    }
+                    db.Entry(category).State = EntityState.Modified;
+                    db.SaveChanges();
+                }
+                else
+                {
+                    ModelState.AddModelError(string.Empty, "Category with the same name already exists! Please choose another name!");
+                    return View(category);
                 }
                 return RedirectToAction("Index");
             }
@@ -106,21 +100,20 @@ namespace Forum.Controllers
         }
 
         // GET: /Category/Delete
+        [HttpGet]
         public ActionResult Delete(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            using (ForumDbContext db = new ForumDbContext())
+            var category = db.Categories.FirstOrDefault(c => c.Id == id);
+            if (category == null)
             {
-                var category = db.Categories.FirstOrDefault(c => c.Id == id);
-                if (category == null)
-                {
-                    return new HttpStatusCodeResult(HttpStatusCode.NotFound);
-                }
-                return View(category);
+                return new HttpStatusCodeResult(HttpStatusCode.NotFound);
             }
+            return View(category);
+
         }
 
         // POST: /Category/Delete
@@ -133,18 +126,25 @@ namespace Forum.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            using (ForumDbContext db = new ForumDbContext())
+            var category = db.Categories.FirstOrDefault(c => c.Id == id);
+            if (category == null)
             {
-                var category = db.Categories.FirstOrDefault(c => c.Id == id);
-                if (category == null)
-                {
-                    return new HttpStatusCodeResult(HttpStatusCode.NotFound);
-                }
-                db.Categories.Remove(category);
-                db.SaveChanges();
+                return new HttpStatusCodeResult(HttpStatusCode.NotFound);
             }
+            db.Categories.Remove(category);
+            db.SaveChanges();
 
             return RedirectToAction("Index");
         }
+
+        protected override void Dispose(bool disposing)
+        {
+            if(disposing)
+            {
+                db.Dispose();
+            }
+            base.Dispose(disposing);
+        }
     }
+
 }

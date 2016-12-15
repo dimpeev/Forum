@@ -20,7 +20,7 @@
                 </li>
             }
             <li>
-                @Html.ActionLink("New thread", "Create", "Articles", routeValues: null, htmlAttributes: new { id = "newThreadLink" })
+                @Html.ActionLink("New thread", "Create", "Article", routeValues: null, htmlAttributes: new { id = "newThreadLink" })
             </li>
             <li>
                 @Html.ActionLink("Hello " + User.Identity.GetUserName() + "!", "Index", "Manage", routeValues: null, htmlAttributes: new { title = "Manage" })
