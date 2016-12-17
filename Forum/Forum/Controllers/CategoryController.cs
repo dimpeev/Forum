@@ -131,6 +131,16 @@ namespace Forum.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.NotFound);
             }
+
+            var isEmpty = db.Articles.Where(c => c.CategoryId == id).Count();
+
+            if(isEmpty > 0)
+            {
+                ModelState.AddModelError(string.Empty, "You can not delete a category which contains threads!");
+
+                return View(category);
+            }
+
             db.Categories.Remove(category);
             db.SaveChanges();
 

@@ -1,0 +1,24 @@
+﻿@model List<Forum.Models.Article>
+@{
+    ViewBag.Title = "Posts by " + ViewBag.AuthorName;
+}
+
+<h2>Posts by @ViewBag.AuthorName</h2>
+<hr />
+
+<div class="container">
+    <div class="well">
+        <div class="panel-group">
+            @foreach (var article in Model)
+            {
+                <div class="panel panel-default">
+                    <div class="panel-heading panel-title">
+                        <span class="glyphicon glyphicon-link"></span>
+                        @Html.ActionLink(@article.Title, "Details", "Article", new { @id = article.Id }, null)
+                    </div>
+                    <div class="panel-body">@article.Content</div>
+                </div>
+            }
+        </div>
+    </div>
+</div>

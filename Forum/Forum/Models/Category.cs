@@ -37,5 +37,6 @@ namespace Forum.Models
             get { return this.article; }
             set { this.article = value; }
         }
+
     }
 }

@@ -1,0 +1,48 @@
+﻿@model List<Forum.Models.Article>
+@{
+//ViewBag.Title = "Threads";
+}
+
+<h2>@ViewBag.Title</h2>
+<hr />
+<div class="container">
+    <div class="well">
+        <div class="panel-group">
+            @foreach (var article in Model)
+            {
+                <div class="panel panel-default">
+                    @if (article.IsImportant)
+                {
+                        <div class="panel-heading panel-title">
+                            <span class="glyphicon glyphicon-exclamation-sign"></span>
+                            @Html.ActionLink(@article.Title, "Details", "Article", new { @id = article.Id }, null)
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="panel-heading panel-title">
+                            <span class="glyphicon glyphicon-link"></span>
+                            @Html.ActionLink(@article.Title, "Details", "Article", new { @id = article.Id }, null)
+                            <div class="pull-right">Number of answers: @article.Answers.Count()</div>
+                        </div>
+                    }
+                    <div class="panel-body">@article.Content</div>
+                    <div class="panel-footer clearfix">
+                        Thread posted by <img src="~/Content/images/@article.Author.ProfileImage" />@Html.ActionLink(@article.Author.DisplayName, "ViewPostsByUser", "Article", new { @id = article.AuthorID }, null) on @article.DateCreated
+                        
+                        <div class="pull-right">
+                            @if (User.IsInRole("Admin"))
+                            {
+                                @Html.ActionLink("Delete", "DeleteThread", "Article", new { @id = article.Id }, new { @class = "btn btn-danger btn-xs" })
+                            }
+                        </div>
+                    </div>
+                </div>
+            }
+            <br />
+            <div class="form-group">
+                @Html.ActionLink("Back", "Index", "Article", null, new { @class = "btn btn-default" })
+            </div>
+        </div>
+    </div>
+</div>

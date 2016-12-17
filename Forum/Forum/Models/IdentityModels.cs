@@ -32,6 +32,8 @@ namespace Forum.Models
         public virtual IDbSet<Article> Articles { get; set; }
         public virtual IDbSet<Tag> Tags { get; set; }
 
+        public virtual IDbSet<Answer> Answers { get; set; }
+
         public static ForumDbContext Create()
         {
             return new ForumDbContext();

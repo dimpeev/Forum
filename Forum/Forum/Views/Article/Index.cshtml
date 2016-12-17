@@ -1,7 +1,22 @@
-﻿
+﻿@model List<Forum.Models.Category>
 @{
     ViewBag.Title = "Threads";
 }
 
-<h2>Threads</h2>
-
+<div class="container">
+    <div class="well">
+        <div class="panel-group">
+            @foreach (var category in Model)
+            {
+                <div class="panel panel-default">
+                    <div class="panel-heading panel-title">
+                        <span class="glyphicon glyphicon-link"></span>
+                        @Html.ActionLink(@category.CategoryName, "ViewThreads", "Article", new { @id = category.Id }, null)
+                        <div class="pull-right">Number of threads: @category.Articles.Count()</div>
+                    </div>
+                    <div class="panel-body">@category.Description</div>
+                </div>
+            }
+        </div>
+    </div>
+</div>

@@ -10,11 +10,14 @@ namespace Forum.Models
     public class Article
     {
 
+        private ICollection<Answer> answers;
+
         private ICollection<Tag> tags;
 
         public Article()
         {
             this.tags = new HashSet<Tag>();
+            this.answers = new HashSet<Answer>();
         }
 
         [Key]
@@ -23,8 +26,6 @@ namespace Forum.Models
         public int CategoryId { get; set; }
 
         public virtual Category CategoryName { get; set; }
-
-        public int ParentPostId { get; set; }
 
         [ForeignKey("Author")]
         public string AuthorID { get; set; }
@@ -41,10 +42,18 @@ namespace Forum.Models
 
         public bool IsImportant { get; set; }
 
+        public bool RequestToDelete { get; set; }
+
         public virtual ICollection<Tag> Tags
         {
             get { return this.tags; }
             set { this.tags = value; }
+        }
+
+        public virtual ICollection<Answer> Answers
+        {
+            get { return this.answers; }
+            set { this.answers = value; }
         }
 
         public bool IsUserAuthor (string username)

@@ -27,3 +27,8 @@ textarea {
     height: 100px;
     width: auto;
 }
+
+.panel-footer img {
+    height: 20px;
+    width: auto;
+}

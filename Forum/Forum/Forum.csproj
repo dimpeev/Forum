@@ -206,6 +206,8 @@
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
+    <Compile Include="Models\AddAnswerViewModel.cs" />
+    <Compile Include="Models\Answer.cs" />
     <Compile Include="Models\ArticleCreateViewModel.cs" />
     <Compile Include="Models\Category.cs" />
     <Compile Include="Models\Article.cs" />
@@ -286,10 +288,12 @@
     <Content Include="Views\User\Delete.cshtml" />
     <Content Include="Views\Home\Search.cshtml" />
     <Content Include="Views\Article\Index.cshtml" />
-    <Content Include="Views\Article\Edit.cshtml" />
-    <Content Include="Views\Article\Delete.cshtml" />
     <Content Include="Views\Article\Create.cshtml" />
     <Content Include="Views\Category\Details.cshtml" />
+    <Content Include="Views\Article\ViewThreads.cshtml" />
+    <Content Include="Views\Article\ViewPostsByUser.cshtml" />
+    <Content Include="Views\Article\Details.cshtml" />
+    <Content Include="Views\Article\AddAnswer.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

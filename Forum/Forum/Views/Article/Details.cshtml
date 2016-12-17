@@ -1,0 +1,55 @@
+﻿@model Forum.Models.Article
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>@Model.Title</h2>
+
+<div class="container">
+    <div class="well">
+        <div class="panel-group">
+            <div class="panel panel-default">
+                <div class="panel-body">@Model.Content</div>
+                <div class="panel-footer">
+                    Thread posted by <img src="~/Content/images/@Model.Author.ProfileImage" />
+                    @Html.ActionLink(@Model.Author.DisplayName, "ViewPostsByUser", "Article", new { @id = Model.AuthorID }, null)
+                    on @Model.DateCreated
+                    <div class="pull-right">
+                        @if (User.IsInRole("Admin") || Model.IsUserAuthor(User.Identity.Name))
+                        {
+                            @Html.ActionLink("Edit", "EditThread", "Article", new { @id = Model.Id }, new { @class = "btn btn-warning btn-xs" })
+                        }
+                    </div>
+
+                </div>
+            </div>
+            @foreach (var answer in Model.Answers)
+            {
+                <div class="panel panel-default">
+                    <div class="panel-body">@answer.Content</div>
+                    <div class="panel-footer clearfix">
+                        Answer posted by <img src="~/Content/images/@answer.Author.ProfileImage" />
+                        @Html.ActionLink(@answer.Author.DisplayName, "ViewPostsByUser", "Article", new { @id = answer.AuthorID }, null)
+                        on @answer.DateCreated
+                        <div class="pull-right">
+                            @if (User.IsInRole("Admin") || answer.IsUserAuthor(User.Identity.Name))
+                            {
+                                @Html.ActionLink("Edit", "EditAnswer", "Article", new { @id = answer.Id }, new { @class = "btn btn-warning btn-xs" })
+                                @:&nbsp;
+                                @Html.ActionLink("Delete", "DeleteAnswer", "Article", new { @id = answer.Id }, new { @class = "btn btn-danger btn-xs" })
+                            }
+                        </div>
+                    </div>
+                </div>
+            }
+            <div class="form-group">
+                <br />
+                @if (User.Identity.IsAuthenticated && !Model.IsImportant)
+                {
+                    @Html.ActionLink("Add answer", "AddAnswer", "Article", new { @id = Model.Id }, new { @class = "btn btn-success" })
+                }
+                @Html.ActionLink("Back", "ViewThreads", "Article", new { @id = Model.CategoryId }, new { @class = "btn btn-default" })
+            </div>
+        </div>
+    </div>
+</div>
