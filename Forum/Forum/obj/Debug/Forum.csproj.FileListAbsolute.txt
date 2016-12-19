@@ -79,4 +79,3 @@ C:\Users\Mitko\Desktop\SoftUniForum_v2.0\Forum\Forum\bin\Microsoft.Owin.Security
 C:\Users\Mitko\Desktop\SoftUniForum_v2.0\Forum\Forum\bin\Microsoft.Owin.Security.MicrosoftAccount.xml
 C:\Users\Mitko\Desktop\SoftUniForum_v2.0\Forum\Forum\obj\Debug\Forum.dll
 C:\Users\Mitko\Desktop\SoftUniForum_v2.0\Forum\Forum\obj\Debug\Forum.pdb
-C:\Users\Mitko\Desktop\SoftUniForum_v2.0\Forum\Forum\obj\Debug\Forum.csprojResolveAssemblyReference.cache

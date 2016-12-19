@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Forum.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -8,6 +9,9 @@ namespace Forum.Controllers
 {
     public class HomeController : Controller
     {
+
+        private ForumDbContext db = new ForumDbContext();
+
         public ActionResult Index()
         {
             return RedirectToAction("Index", "Article");
@@ -27,9 +31,20 @@ namespace Forum.Controllers
             return View();
         }
 
-        public ActionResult Search()
-        {
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Search(string search)
+        { 
             return View();
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                db.Dispose();
+            }
+            base.Dispose(disposing);
         }
     }
 }
