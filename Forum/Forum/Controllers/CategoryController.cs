@@ -127,6 +127,7 @@ namespace Forum.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
             var category = db.Categories.FirstOrDefault(c => c.Id == id);
+
             if (category == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.NotFound);

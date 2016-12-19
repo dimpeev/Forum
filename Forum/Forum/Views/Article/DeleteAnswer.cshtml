@@ -1,0 +1,29 @@
+﻿@model Forum.Models.Answer
+@{
+    ViewBag.Title = "Delete answer";
+}
+
+<div class="container">
+    <div class="well">
+        @using (Html.BeginForm("DeleteAnswer", "Article", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+        {
+            @Html.AntiForgeryToken()
+            @Html.ValidationSummary("", new { @class = "text-danger" })
+            <br />
+
+            <div class="form-group">
+                @Html.LabelFor(m => m.Content, new { @class = "col-sm-4 control-label" })
+                <div class="col-sm-4">
+                    @Html.TextAreaFor(m => m.Content, new { @class = "form-control", rows = 5, @readonly = "readonly" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-sm-offset-4 col-sm-4">
+                    <input type="submit" class="btn btn-danger" value="Delete" />
+                    @Html.ActionLink("Cancel", "Details", "Article", new { @id = Model.Article.Id }, new { @class = "btn btn-default" })
+                </div>
+            </div>
+        }
+    </div>
+</div>

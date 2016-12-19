@@ -1,0 +1,36 @@
+﻿@model List<Forum.Models.Article>
+@{
+    ViewBag.Title = "View posts by tag";
+}
+
+<h2>Posts tagged with <strong>@ViewBag.Tag</strong></h2>
+<hr />
+
+<div class="container">
+    <div class="well">
+        <div class="panel-group">
+            @foreach (var article in Model)
+            {
+                <div class="panel panel-default">
+                        <div class="panel-heading panel-title">
+                            <span class="glyphicon glyphicon-link"></span>
+                            @Html.ActionLink(@article.Title, "Details", "Article", new { @id = article.Id }, null)
+                        </div>
+
+                    <div class="panel-body">@article.Content</div>
+                    <div class="panel-footer clearfix">
+                        Posted on @article.DateCreated.ToString()
+                        @if (article.LastEdited.HasValue)
+                        {
+                            @:(Edited on: @article.LastEdited.ToString())
+                        }
+                    </div>
+                </div>
+            }
+        </div>
+        <br />
+        <div class="form-group">
+            @Html.ActionLink("Back", "Index", "Article", null, new { @class = "btn btn-default" })
+        </div>
+    </div>
+</div>

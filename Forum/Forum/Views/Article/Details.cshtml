@@ -4,16 +4,20 @@
 }
 
 <h2>@Model.Title</h2>
-
+<hr />
 <div class="container">
     <div class="well">
         <div class="panel-group">
             <div class="panel panel-default">
                 <div class="panel-body">@Model.Content</div>
                 <div class="panel-footer">
-                    Thread posted by <img src="~/Content/images/@Model.Author.ProfileImage" />
+                    Posted by <img src="~/Content/images/@Model.Author.ProfileImage" />
                     @Html.ActionLink(@Model.Author.DisplayName, "ViewPostsByUser", "Article", new { @id = Model.AuthorID }, null)
-                    on @Model.DateCreated
+                    on @Model.DateCreated.ToString()
+                    @if (Model.LastEdited.HasValue)
+                    {
+                        @:(Edited on: @Model.LastEdited.ToString())
+                    }
                     <div class="pull-right">
                         @if (User.IsInRole("Admin") || Model.IsUserAuthor(User.Identity.Name))
                         {
@@ -28,9 +32,13 @@
                 <div class="panel panel-default">
                     <div class="panel-body">@answer.Content</div>
                     <div class="panel-footer clearfix">
-                        Answer posted by <img src="~/Content/images/@answer.Author.ProfileImage" />
+                        Posted by <img src="~/Content/images/@answer.Author.ProfileImage" />
                         @Html.ActionLink(@answer.Author.DisplayName, "ViewPostsByUser", "Article", new { @id = answer.AuthorID }, null)
-                        on @answer.DateCreated
+                        on @answer.DateCreated.ToString()
+                        @if (answer.LastEdited.HasValue)
+                        {
+                            @:(Edited on: @answer.LastEdited.ToString())
+                    }
                         <div class="pull-right">
                             @if (User.IsInRole("Admin") || answer.IsUserAuthor(User.Identity.Name))
                             {

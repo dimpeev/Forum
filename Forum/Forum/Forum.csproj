@@ -206,8 +206,10 @@
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
+    <Compile Include="Models\EditAnswerViewModel.cs" />
     <Compile Include="Models\AddAnswerViewModel.cs" />
     <Compile Include="Models\Answer.cs" />
+    <Compile Include="Models\ArticleEditViewModel.cs" />
     <Compile Include="Models\ArticleCreateViewModel.cs" />
     <Compile Include="Models\Category.cs" />
     <Compile Include="Models\Article.cs" />
@@ -294,6 +296,11 @@
     <Content Include="Views\Article\ViewPostsByUser.cshtml" />
     <Content Include="Views\Article\Details.cshtml" />
     <Content Include="Views\Article\AddAnswer.cshtml" />
+    <Content Include="Views\Article\DeleteThread.cshtml" />
+    <Content Include="Views\Article\DeleteAnswer.cshtml" />
+    <Content Include="Views\Article\EditThread.cshtml" />
+    <Content Include="Views\Article\EditAnswer.cshtml" />
+    <Content Include="Views\Article\ViewPostsByTag.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

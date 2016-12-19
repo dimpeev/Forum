@@ -6,8 +6,9 @@ using System.Web;
 
 namespace Forum.Models
 {
-    public class ArticleCreateViewModel
+    public class ArticleEditViewModel
     {
+        public int Id { get; set; }
 
         [Required]
         [StringLength(100)]

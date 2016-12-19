@@ -36,9 +36,9 @@ namespace Forum.Models
 
         public string Content { get; set; }
 
-        public string DateCreated { get; set; }
+        public DateTime? DateCreated { get; set; }
 
-        public string LastEdited { get; set; }
+        public DateTime? LastEdited { get; set; }
 
         public bool IsImportant { get; set; }
 

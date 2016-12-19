@@ -12,7 +12,7 @@
             {
                 <div class="panel panel-default">
                     @if (article.IsImportant)
-                {
+                    {
                         <div class="panel-heading panel-title">
                             <span class="glyphicon glyphicon-exclamation-sign"></span>
                             @Html.ActionLink(@article.Title, "Details", "Article", new { @id = article.Id }, null)
@@ -27,9 +27,14 @@
                         </div>
                     }
                     <div class="panel-body">@article.Content</div>
+
                     <div class="panel-footer clearfix">
-                        Thread posted by <img src="~/Content/images/@article.Author.ProfileImage" />@Html.ActionLink(@article.Author.DisplayName, "ViewPostsByUser", "Article", new { @id = article.AuthorID }, null) on @article.DateCreated
-                        
+                        Posted by <img src="~/Content/images/@article.Author.ProfileImage" />@Html.ActionLink(@article.Author.DisplayName, "ViewPostsByUser", "Article", new { @id = article.AuthorID }, null) on @article.DateCreated.ToString()
+
+                        @if (article.LastEdited.HasValue)
+                        {
+                            @:(Edited on: @article.LastEdited.ToString())
+                        }
                         <div class="pull-right">
                             @if (User.IsInRole("Admin"))
                             {
@@ -37,12 +42,32 @@
                             }
                         </div>
                     </div>
+                    <div  class="">
+                        @foreach (var tag in article.Tags)
+                        {
+                            @:&nbsp; @Html.ActionLink(@tag.Name, "ViewPostsByTag", "Article", new { @tag = @tag.Id }, new { @class = "label label-primary" })
+                        }
+                    </div>
                 </div>
             }
             <br />
             <div class="form-group">
                 @Html.ActionLink("Back", "Index", "Article", null, new { @class = "btn btn-default" })
             </div>
+        </div>
+        <div class="text-center">
+            @if (ViewBag.NumberOfPages > 0)
+            {
+                <div>
+                    <ul class="pagination pagination-lg">
+                        @for (int i = 0; i < ViewBag.NumberOfPages; i++)
+                        {
+                            @:
+                            <li>@Html.ActionLink((i + 1).ToString(), "ViewThreads", "Article", new { @page = (i + 1) }, new { @class = "" })</li>
+                        }
+                    </ul>
+                </div>
+            }
         </div>
     </div>
 </div>

@@ -28,5 +28,10 @@ namespace Forum.Models
             get { return this.articles; }
             set { this.articles = value; }
         }
+
+        public bool GetTagId(int id)
+        {
+            return this.Id == id;
+        }
     }
 }
