@@ -37,21 +37,24 @@
                 </div>
                 foreach (var answer in article.Answers)
                 {
-                    <div class="panel panel-default">
-                        <div class="panel-heading panel-title clearfix">
-                            <span class="glyphicon glyphicon-link"></span>
-                            @Html.ActionLink(@article.Title, "Details", "Article", new { @id = article.Id }, null)
-                            <span class="label label-success pull-right">Answer</span>
+                    if (answer.AuthorID == article.AuthorID)
+                    {
+                        <div class="panel panel-default">
+                            <div class="panel-heading panel-title clearfix">
+                                <span class="glyphicon glyphicon-link"></span>
+                                @Html.ActionLink(@article.Title, "Details", "Article", new { @id = article.Id }, null)
+                                <span class="label label-success pull-right">Answer</span>
+                            </div>
+                            <div class="panel-body">@answer.Content</div>
+                            <div class="panel-footer clearfix">
+                                Posted on @answer.DateCreated.ToString()
+                                @if (answer.LastEdited.HasValue)
+                                {
+                                    @:(Edited on: @answer.LastEdited.ToString())
+                                }
+                            </div>
                         </div>
-                        <div class="panel-body">@answer.Content</div>
-                        <div class="panel-footer clearfix">
-                            Posted on @answer.DateCreated.ToString()
-                            @if (answer.LastEdited.HasValue)
-                            {
-                                @:(Edited on: @answer.LastEdited.ToString())
-                        }
-                        </div>
-                    </div>
+                    }
                 }
             }
         </div>
